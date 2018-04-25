@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/jquery.sparkline.js"></script>
+    <script src="https://cdn.netpie.io/microgear.js"></script>
+    <style type="text/css">
+    .divWithBgImage {
+        background-image: url(imgs/bg-town.png);
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: 100%;
+        /*propotional resize*/
+        height: 100vh;
+        width: 100vw;
+        background-color: #00bfff;
+    }
+
+    .logo-kidbright {}
+
+    .inline {
+        display: inline;
+    }
+    </style>
+    <script type="text/javascript">
+    var value1max = 0.00;
+    var value2max = 0.00;
+    var value3max = 0.00;
+    var value4max = 0.00;
+
+    var value1min = 0.00;
+    var value2min = 0.00;
+    var value3min = 0.00;
+    var value4min = 0.00;
+
+    var listvalue1 = [];
+    var listvalue2 = [];
+    var listvalue3 = [];
+    var listvalue4 = [];
+    </script>
+    <script>
+    const APPID = "armydev";
+    const APPKEY = "WMTjwkOnA6u7vzO";
+    const APPSECRET = "8WtPTU9kp3f8wh5d44N9NznU0";
+    var firsttime = true;
+    var microgear = Microgear.create({
+        key: APPKEY,
+        secret: APPSECRET,
+        alias: "html" /*  optional  */
+    });
+
+    microgear.on('message', function(topic, msg) {
+        var value = msg.split(",");
+        document.getElementById("value1").innerHTML = parseFloat(value[0]).toFixed(2);
+        document.getElementById("value2").innerHTML = parseFloat(value[1]).toFixed(2);
+        document.getElementById("value3").innerHTML = parseFloat(value[2]).toFixed(2);
+        document.getElementById("value4").innerHTML = parseFloat(value[3]).toFixed(2);
+        listvalue1.push(parseFloat(value[0]).toFixed(2));
+        listvalue2.push(parseFloat(value[1]).toFixed(2));
+        listvalue3.push(parseFloat(value[2]).toFixed(2));
+        listvalue4.push(parseFloat(value[3]).toFixed(2));
+        value1max = parseFloat(Math.max(value[0], value1max)).toFixed(2);
+        value2max = parseFloat(Math.max(value[1], value2max)).toFixed(2);
+        value3max = parseFloat(Math.max(value[2], value3max)).toFixed(2);
+        value4max = parseFloat(Math.max(value[3], value4max)).toFixed(2);
+        if (firsttime) {
+            value1min = parseFloat(value[0]).toFixed(2);
+            value2min = parseFloat(value[1]).toFixed(2);
+            value3min = parseFloat(value[2]).toFixed(2);
+            value4min = parseFloat(value[3]).toFixed(2);
+            firsttime = false;
+        } else {
+            value1min = parseFloat(Math.min(value[0], value1min)).toFixed(2);
+            value2min = parseFloat(Math.min(value[1], value2min)).toFixed(2);
+            value3min = parseFloat(Math.min(value[2], value3min)).toFixed(2);
+            value4min = parseFloat(Math.min(value[3], value4min)).toFixed(2);
+        }
+        document.getElementById("value1max").innerHTML = value1max;
+        document.getElementById("value2max").innerHTML = value2max;
+        document.getElementById("value3max").innerHTML = value3max;
+        document.getElementById("value4max").innerHTML = value4max;
+        document.getElementById("value1min").innerHTML = value1min;
+        document.getElementById("value2min").innerHTML = value2min;
+        document.getElementById("value3min").innerHTML = value3min;
+        document.getElementById("value4min").innerHTML = value4min;
+        if (listvalue1.length > 15) {
+            listvalue1.shift();
+            listvalue2.shift();
+            listvalue3.shift();
+            listvalue4.shift();
+        }
+    });
+
+    microgear.on('connected', function() {
+        console.log("connected")
+    });
+
+    microgear.on('present', function(event) {
+        console.log(event);
+    });
+
+    microgear.on('absent', function(event) {
+        console.log(event);
+    });
+
+    microgear.connect(APPID);
+    </script>
+    <script type="text/javascript">
+        function insertSparkline() {
+            var widthDiv = document.getElementById("inlinesparkline1").parentElement.clientWidth - 40;
+            $('#inlinesparkline1').sparkline(listvalue1, {
+                type: 'line',
+                width: widthDiv,
+                height: '50',
+                lineColor: '#00ffff',
+                fillColor: '#00ffff',
+                spotColor: '',
+                minSpotColor: '',
+                maxSpotColor: ''
+            });
+            $('#inlinesparkline2').sparkline(listvalue2, {
+                type: 'line',
+                width: widthDiv,
+                height: '50',
+                lineColor: '#ff8000',
+                fillColor: '#ff8000',
+                spotColor: '',
+                minSpotColor: '',
+                maxSpotColor: ''
+            });
+            $('#inlinesparkline3').sparkline(listvalue3, {
+                type: 'line',
+                width: widthDiv,
+                height: '50',
+                lineColor: '#00ffbf',
+                fillColor: '#00ffbf',
+                spotColor: '',
+                minSpotColor: '',
+                maxSpotColor: ''
+            });
+            $('#inlinesparkline4').sparkline(listvalue4, {
+                type: 'line',
+                width: widthDiv,
+                height: '50',
+                lineColor: '#ffff00',
+                fillColor: '#ffff00',
+                spotColor: '',
+                minSpotColor: '',
+                maxSpotColor: ''
+            });
+        }
+    $(function() {        
+        setInterval(insertSparkline, 3000);
+    });
+
+    window.onresize = function(event) {
+        insertSparkline();
+    };
+    </script>
+</head>
+
+<body class="divWithBgImage">
+    <img src="imgs/logo.png" width="300px" style="padding-top: 20px">
+    <div class="container">
+        <div class="row justify-content-md-center align-items-center" style="height: 65vh">
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" align="center"><span><img src="imgs/ball1.png" height="30px"></span> Ballon NO.1</h5>
+                        <br>
+                        <h1 align="center" id="value1">00.00</h1>
+                        <p align="center" style="color: #606060">mg/m<sup>3</sup></p>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p align="left" style="color: #484848" id="value1max">00.00</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p align="right" style="color: #808080" id="value1min">00.00</p>
+                            </div>
+                        </div>
+                        <span id="inlinesparkline1"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" align="center"><span><img src="imgs/ball2.png" height="30px"></span> Ballon NO.2</h5>
+                        <br>
+                        <h1 align="center" id="value2">00.00</h1>
+                        <p align="center" style="color: #606060">mg/m<sup>3</sup></p>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p align="left" style="color: #484848" id="value2max">00.00</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p align="right" style="color: #808080" id="value2min">00.00</p>
+                            </div>
+                        </div>
+                        <span id="inlinesparkline2"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" align="center"><span><img src="imgs/ball3.png" height="30px"></span> Ballon NO.3</h5>
+                        <br>
+                        <h1 align="center" id="value3">00.00</h1>
+                        <p align="center" style="color: #606060">mg/m<sup>3</sup></p>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p align="left" style="color: #484848" id="value3max">00.00</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p align="right" style="color: #808080" id="value3min">00.00</p>
+                            </div>
+                        </div>
+                        <span id="inlinesparkline3"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" align="center"><span><img src="imgs/ball4.png" height="30px"></span> Ballon NO.4</h5>
+                        <br>
+                        <h1 align="center" id="value4">00.00</h1>
+                        <p align="center" style="color: #606060">mg/m<sup>3</sup></p>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p align="left" style="color: #484848" id="value4max">00.00</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p align="right" style="color: #808080" id="value4min">00.00</p>
+                            </div>
+                        </div>
+                        <span id="inlinesparkline4"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

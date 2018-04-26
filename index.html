@@ -27,15 +27,15 @@
     }
     </style>
     <script type="text/javascript">
-    var value1max = 0.00;
-    var value2max = 0.00;
-    var value3max = 0.00;
-    var value4max = 0.00;
+    // var value1max = 0.00;
+    // var value2max = 0.00;
+    // var value3max = 0.00;
+    // var value4max = 0.00;
 
-    var value1min = 0.00;
-    var value2min = 0.00;
-    var value3min = 0.00;
-    var value4min = 0.00;
+    // var value1min = 0.00;
+    // var value2min = 0.00;
+    // var value3min = 0.00;
+    // var value4min = 0.00;
 
     var listvalue1 = [];
     var listvalue2 = [];
@@ -63,30 +63,30 @@
         listvalue2.push(parseFloat(value[1]).toFixed(2));
         listvalue3.push(parseFloat(value[2]).toFixed(2));
         listvalue4.push(parseFloat(value[3]).toFixed(2));
-        value1max = parseFloat(Math.max(value[0], value1max)).toFixed(2);
-        value2max = parseFloat(Math.max(value[1], value2max)).toFixed(2);
-        value3max = parseFloat(Math.max(value[2], value3max)).toFixed(2);
-        value4max = parseFloat(Math.max(value[3], value4max)).toFixed(2);
-        if (firsttime) {
-            value1min = parseFloat(value[0]).toFixed(2);
-            value2min = parseFloat(value[1]).toFixed(2);
-            value3min = parseFloat(value[2]).toFixed(2);
-            value4min = parseFloat(value[3]).toFixed(2);
-            firsttime = false;
-        } else {
-            value1min = parseFloat(Math.min(value[0], value1min)).toFixed(2);
-            value2min = parseFloat(Math.min(value[1], value2min)).toFixed(2);
-            value3min = parseFloat(Math.min(value[2], value3min)).toFixed(2);
-            value4min = parseFloat(Math.min(value[3], value4min)).toFixed(2);
-        }
-        document.getElementById("value1max").innerHTML = value1max;
-        document.getElementById("value2max").innerHTML = value2max;
-        document.getElementById("value3max").innerHTML = value3max;
-        document.getElementById("value4max").innerHTML = value4max;
-        document.getElementById("value1min").innerHTML = value1min;
-        document.getElementById("value2min").innerHTML = value2min;
-        document.getElementById("value3min").innerHTML = value3min;
-        document.getElementById("value4min").innerHTML = value4min;
+        // value1max = parseFloat(Math.max(value[0], value1max)).toFixed(2);
+        // value2max = parseFloat(Math.max(value[1], value2max)).toFixed(2);
+        // value3max = parseFloat(Math.max(value[2], value3max)).toFixed(2);
+        // value4max = parseFloat(Math.max(value[3], value4max)).toFixed(2);
+        // if (firsttime) {
+        //     value1min = parseFloat(value[0]).toFixed(2);
+        //     value2min = parseFloat(value[1]).toFixed(2);
+        //     value3min = parseFloat(value[2]).toFixed(2);
+        //     value4min = parseFloat(value[3]).toFixed(2);
+        //     firsttime = false;
+        // } else {
+        //     value1min = parseFloat(Math.min(value[0], value1min)).toFixed(2);
+        //     value2min = parseFloat(Math.min(value[1], value2min)).toFixed(2);
+        //     value3min = parseFloat(Math.min(value[2], value3min)).toFixed(2);
+        //     value4min = parseFloat(Math.min(value[3], value4min)).toFixed(2);
+        // }
+        // document.getElementById("value1max").innerHTML = value1max;
+        // document.getElementById("value2max").innerHTML = value2max;
+        // document.getElementById("value3max").innerHTML = value3max;
+        // document.getElementById("value4max").innerHTML = value4max;
+        // document.getElementById("value1min").innerHTML = value1min;
+        // document.getElementById("value2min").innerHTML = value2min;
+        // document.getElementById("value3min").innerHTML = value3min;
+        // document.getElementById("value4min").innerHTML = value4min;
         if (listvalue1.length > 15) {
             listvalue1.shift();
             listvalue2.shift();

@@ -19,33 +19,28 @@
         width: 100vw;
         background-color: #00bfff;
     }
-
-    .logo-kidbright {}
-
-    .inline {
-        display: inline;
+    .jqstooltip {
+        width: 55px;
+        height: 50px;
     }
     </style>
     <script type="text/javascript">
-    // var value1max = 0.00;
-    // var value2max = 0.00;
-    // var value3max = 0.00;
-    // var value4max = 0.00;
-
-    // var value1min = 0.00;
-    // var value2min = 0.00;
-    // var value3min = 0.00;
-    // var value4min = 0.00;
-
-    var listvalue1 = [];
-    var listvalue2 = [];
-    var listvalue3 = [];
-    var listvalue4 = [];
+    var listvalue1pm2_5 = [];
+    var listvalue1pm10 = [];
+    var listvalue2pm2_5 = [];
+    var listvalue2pm10 = [];
+    var listvalue3pm2_5 = [];
+    var listvalue3pm10 = [];
+    var listvalue4pm2_5 = [];
+    var listvalue4pm10 = [];
     </script>
     <script>
     const APPID = "armydev";
     const APPKEY = "WMTjwkOnA6u7vzO";
     const APPSECRET = "8WtPTU9kp3f8wh5d44N9NznU0";
+    // const APPID = "particleMeasurement";
+    // const APPKEY = "WG81KnRenTGrlzo";
+    // const APPSECRET = "Kw3QVq2JCltRrmAO3eYEc03KZ";
     var firsttime = true;
     var microgear = Microgear.create({
         key: APPKEY,
@@ -53,50 +48,52 @@
         alias: "html" /*  optional  */
     });
 
-    microgear.on('message', function(topic, msg) {
-        var value = msg.split(",");
-        document.getElementById("value1").innerHTML = parseFloat(value[0]).toFixed(2);
-        document.getElementById("value2").innerHTML = parseFloat(value[1]).toFixed(2);
-        document.getElementById("value3").innerHTML = parseFloat(value[2]).toFixed(2);
-        document.getElementById("value4").innerHTML = parseFloat(value[3]).toFixed(2);
-        listvalue1.push(parseFloat(value[0]).toFixed(2));
-        listvalue2.push(parseFloat(value[1]).toFixed(2));
-        listvalue3.push(parseFloat(value[2]).toFixed(2));
-        listvalue4.push(parseFloat(value[3]).toFixed(2));
-        // value1max = parseFloat(Math.max(value[0], value1max)).toFixed(2);
-        // value2max = parseFloat(Math.max(value[1], value2max)).toFixed(2);
-        // value3max = parseFloat(Math.max(value[2], value3max)).toFixed(2);
-        // value4max = parseFloat(Math.max(value[3], value4max)).toFixed(2);
-        // if (firsttime) {
-        //     value1min = parseFloat(value[0]).toFixed(2);
-        //     value2min = parseFloat(value[1]).toFixed(2);
-        //     value3min = parseFloat(value[2]).toFixed(2);
-        //     value4min = parseFloat(value[3]).toFixed(2);
-        //     firsttime = false;
-        // } else {
-        //     value1min = parseFloat(Math.min(value[0], value1min)).toFixed(2);
-        //     value2min = parseFloat(Math.min(value[1], value2min)).toFixed(2);
-        //     value3min = parseFloat(Math.min(value[2], value3min)).toFixed(2);
-        //     value4min = parseFloat(Math.min(value[3], value4min)).toFixed(2);
-        // }
-        // document.getElementById("value1max").innerHTML = value1max;
-        // document.getElementById("value2max").innerHTML = value2max;
-        // document.getElementById("value3max").innerHTML = value3max;
-        // document.getElementById("value4max").innerHTML = value4max;
-        // document.getElementById("value1min").innerHTML = value1min;
-        // document.getElementById("value2min").innerHTML = value2min;
-        // document.getElementById("value3min").innerHTML = value3min;
-        // document.getElementById("value4min").innerHTML = value4min;
-        if (listvalue1.length > 15) {
-            listvalue1.shift();
-            listvalue2.shift();
-            listvalue3.shift();
-            listvalue4.shift();
+    function addValue(node, pm2_5, pm10) {
+        document.getElementById(node + "pm2_5").innerHTML = parseFloat(pm2_5).toFixed(2);
+        document.getElementById(node + "pm10").innerHTML = parseFloat(pm10).toFixed(2);
+        if (node == "node0") {
+            listvalue1pm2_5.push(parseFloat(pm2_5).toFixed(2));
+            listvalue1pm10.push(parseFloat(pm10).toFixed(2));
+            if (listvalue1pm10.length > 15) {
+                listvalue1pm2_5.shift();
+                listvalue1pm10.shift();
+            }
+        } else if (node == "node1") {
+            listvalue2pm2_5.push(parseFloat(pm2_5).toFixed(2));
+            listvalue2pm10.push(parseFloat(pm10).toFixed(2));
+            if (listvalue2pm10.length > 15) {
+                listvalue2pm2_5.shift();
+                listvalue2pm10.shift();
+            }
+        } else if (node == "node2") {
+            listvalue3pm2_5.push(parseFloat(pm2_5).toFixed(2));
+            listvalue3pm10.push(parseFloat(pm10).toFixed(2));
+            if (listvalue3pm10.length > 15) {
+                listvalue3pm2_5.shift();
+                listvalue3pm10.shift();
+            }
+        } else if (node == "node3") {
+            listvalue4pm2_5.push(parseFloat(pm2_5).toFixed(2));
+            listvalue4pm10.push(parseFloat(pm10).toFixed(2));
+            if (listvalue4pm10.length > 15) {
+                listvalue4pm2_5.shift();
+                listvalue4pm10.shift();
+            }
         }
+    }
+
+    microgear.on('message', function(topic, msg) {
+        var node = topic.split("/")[2];
+        var message = msg.split(",");
+        addValue(node, message[0], message[1])
     });
 
     microgear.on('connected', function() {
         console.log("connected")
+        microgear.subscribe("/node0/pm");
+        microgear.subscribe("/node1/pm");
+        microgear.subscribe("/node2/pm");
+        microgear.subscribe("/node3/pm");
     });
 
     microgear.on('present', function(event) {
@@ -110,56 +107,117 @@
     microgear.connect(APPID);
     </script>
     <script type="text/javascript">
-        function insertSparkline() {
-            var widthDiv = document.getElementById("inlinesparkline1").parentElement.clientWidth - 40;
-            $('#inlinesparkline1').sparkline(listvalue1, {
-                type: 'line',
-                width: widthDiv,
-                height: '50',
-                lineColor: '#00ffff',
-                fillColor: '#00ffff',
-                spotColor: '',
-                minSpotColor: '',
-                maxSpotColor: ''
-            });
-            $('#inlinesparkline2').sparkline(listvalue2, {
-                type: 'line',
-                width: widthDiv,
-                height: '50',
-                lineColor: '#ff8000',
-                fillColor: '#ff8000',
-                spotColor: '',
-                minSpotColor: '',
-                maxSpotColor: ''
-            });
-            $('#inlinesparkline3').sparkline(listvalue3, {
-                type: 'line',
-                width: widthDiv,
-                height: '50',
-                lineColor: '#00ffbf',
-                fillColor: '#00ffbf',
-                spotColor: '',
-                minSpotColor: '',
-                maxSpotColor: ''
-            });
-            $('#inlinesparkline4').sparkline(listvalue4, {
-                type: 'line',
-                width: widthDiv,
-                height: '50',
-                lineColor: '#ffff00',
-                fillColor: '#ffff00',
-                spotColor: '',
-                minSpotColor: '',
-                maxSpotColor: ''
-            });
-        }
-    $(function() {        
+    function insertSparkline() {
+        var widthDiv = document.getElementById("inlinesparkline1").parentElement.clientWidth - 40;
+        $('#inlinesparkline1').sparkline(listvalue1pm2_5, {
+            type: 'line',
+            width: widthDiv,
+            height: '50',
+            lineColor: '#00e6e6',
+            fillColor: '#00e6e6',
+            spotColor: '',
+            minSpotColor: '',
+            maxSpotColor: '',
+            changeRangeMin: 1,
+            chartRangeMax: 1,
+        });
+
+        $('#inlinesparkline1').sparkline(listvalue1pm10, {
+            lineColor: "#00b3b3",
+            fillColor: '',
+            spotColor: '',
+            height: '50',
+            composite: true,
+            changeRangeMin: 1,
+            chartRangeMax: 1,
+            minSpotColor: '',
+            maxSpotColor: '',
+        });
+
+        $('#inlinesparkline2').sparkline(listvalue2pm2_5, {
+            type: 'line',
+            width: widthDiv,
+            height: '50',
+            lineColor: "#ff8000",
+            fillColor: '#ff8000',
+            spotColor: '',
+            minSpotColor: '',
+            maxSpotColor: '',
+            changeRangeMin: 1,
+            chartRangeMax: 1,
+        });
+
+        $('#inlinesparkline2').sparkline(listvalue2pm10, {
+            lineColor: '#b35a00',
+            fillColor: '',
+            spotColor: '',
+            composite: true,
+            changeRangeMin: 1,
+            chartRangeMax: 1,
+            minSpotColor: '',
+            maxSpotColor: '',
+        });
+
+
+        $('#inlinesparkline3').sparkline(listvalue3pm2_5, {
+            type: 'line',
+            width: widthDiv,
+            height: '50',
+            lineColor: "#00e6ac",
+            fillColor: '#00e6ac',
+            spotColor: '',
+            minSpotColor: '',
+            maxSpotColor: '',
+            changeRangeMin: 1,
+            chartRangeMax: 1,
+        });
+
+        $('#inlinesparkline3').sparkline(listvalue3pm10, {
+            lineColor: '#00b386',
+            fillColor: '',
+            spotColor: '',
+            composite: true,
+            changeRangeMin: 1,
+            chartRangeMax: 1,
+            minSpotColor: '',
+            maxSpotColor: '',
+        });
+
+        $('#inlinesparkline4').sparkline(listvalue4pm2_5, {
+            type: 'line',
+            width: widthDiv,
+            height: '50',
+            lineColor: "#e6e600",
+            fillColor: '#e6e600',
+            spotColor: '',
+            minSpotColor: '',
+            maxSpotColor: '',
+            changeRangeMin: 1,
+            chartRangeMax: 1,
+        });
+
+        $('#inlinesparkline4').sparkline(listvalue4pm10, {
+            lineColor: '#b3b300',
+            fillColor: '',
+            spotColor: '',
+            composite: true,
+            changeRangeMin: 1,
+            chartRangeMax: 1,
+            minSpotColor: '',
+            maxSpotColor: '',
+        });
+    }
+    $(function() {
         setInterval(insertSparkline, 3000);
     });
 
     window.onresize = function(event) {
         insertSparkline();
     };
+
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
     </script>
 </head>
 
@@ -172,7 +230,9 @@
                     <div class="card-body" style="margin-top: 5px">
                         <h5 class="card-title" align="center"><span><img src="imgs/ball1.png" height="30px"></span> Ballon NO.1</h5>
                         <br>
-                        <h1 align="center" id="value1">00.00</h1>
+                        <h1 align="center" id="node0pm2_5" data-toggle="tooltip" title="PM2.5" style="color:#00e6e6;">0.00</h1></span>
+                        <hr>
+                        <h1 align="center" id="node0pm10" data-toggle="tooltip" title="PM10" style="color:#00b3b3;">0.00</h1>
                         <p align="center" style="color: #606060">mg/m<sup>3</sup></p>
                         <!-- <div class="row">
                             <div class="col-sm-6">
@@ -182,7 +242,7 @@
                                 <p align="right" style="color: #808080" id="value1min">00.00</p>
                             </div>
                         </div> -->
-                        <br>
+                        <!--  <br> -->
                         <span id="inlinesparkline1"></span>
                     </div>
                 </div>
@@ -192,9 +252,11 @@
                     <div class="card-body" style="margin-top: 5px">
                         <h5 class="card-title" align="center"><span><img src="imgs/ball2.png" height="30px"></span> Ballon NO.2</h5>
                         <br>
-                        <h1 align="center" id="value2">00.00</h1>
+                        <h1 align="center" id="node1pm2_5" data-toggle="tooltip" title="PM2.5" style="color:#ff8000;">0.00</h1>
+                        <hr>
+                        <h1 align="center" id="node1pm10" data-toggle="tooltip" title="PM10" style="color:#b35a00;">0.00</h1>
                         <p align="center" style="color: #606060">mg/m<sup>3</sup></p>
-                       <!--  <div class="row">
+                        <!--  <div class="row">
                             <div class="col-sm-6">
                                 <p align="left" style="color: #484848" id="value2max">00.00</p>
                             </div>
@@ -202,7 +264,6 @@
                                 <p align="right" style="color: #808080" id="value2min">00.00</p>
                             </div>
                         </div> -->
-                        <br>
                         <span id="inlinesparkline2"></span>
                     </div>
                 </div>
@@ -212,7 +273,9 @@
                     <div class="card-body" style="margin-top: 5px">
                         <h5 class="card-title" align="center"><span><img src="imgs/ball3.png" height="30px"></span> Ballon NO.3</h5>
                         <br>
-                        <h1 align="center" id="value3">00.00</h1>
+                        <h1 align="center" id="node2pm2_5" data-toggle="tooltip" title="PM2.5" style="color:#00e6ac;">0.00</h1>
+                        <hr>
+                        <h1 align="center" id="node2pm10" data-toggle="tooltip" title="PM10" style="color:#00b386;">0.00</h1>
                         <p align="center" style="color: #606060">mg/m<sup>3</sup></p>
                         <!-- <div class="row">
                             <div class="col-sm-6">
@@ -222,7 +285,6 @@
                                 <p align="right" style="color: #808080" id="value3min">00.00</p>
                             </div>
                         </div> -->
-                        <br>
                         <span id="inlinesparkline3"></span>
                     </div>
                 </div>
@@ -232,7 +294,9 @@
                     <div class="card-body" style="margin-top: 5px">
                         <h5 class="card-title" align="center"><span><img src="imgs/ball4.png" height="30px"></span> Ballon NO.4</h5>
                         <br>
-                        <h1 align="center" id="value4">00.00</h1>
+                        <h1 align="center" id="node3pm2_5" data-toggle="tooltip" title="PM2.5" style="color:#e6e600;">0.00</h1>
+                        <hr>
+                        <h1 align="center" id="node3pm10" data-toggle="tooltip" title="PM10" style="color:#b3b300;">0.00</h1>
                         <p align="center" style="color: #606060">mg/m<sup>3</sup></p>
                         <!-- <div class="row">
                             <div class="col-sm-6">
@@ -242,7 +306,6 @@
                                 <p align="right" style="color: #808080" id="value4min">00.00</p>
                             </div>
                         </div> -->
-                        <br>
                         <span id="inlinesparkline4"></span>
                     </div>
                 </div>

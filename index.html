@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
     <title>KidBright</title>
     <link rel="icon" href="imgs/logo_kidbright.png" />
@@ -50,30 +52,30 @@
     });
 
     function addValue(node, pm2_5, pm10) {
-        document.getElementById(node + "pm2_5").innerHTML = parseFloat(pm2_5).toFixed(2);
-        document.getElementById(node + "pm10").innerHTML = parseFloat(pm10).toFixed(2);
-        if (node == "node0") {
+        document.getElementById(node + "2_5").innerHTML = parseFloat(pm2_5).toFixed(2);
+        document.getElementById(node + "10").innerHTML = parseFloat(pm10).toFixed(2);
+        if (node == "node0pm") {
             listvalue1pm2_5.push(parseFloat(pm2_5).toFixed(2));
             listvalue1pm10.push(parseFloat(pm10).toFixed(2));
             if (listvalue1pm10.length > 15) {
                 listvalue1pm2_5.shift();
                 listvalue1pm10.shift();
             }
-        } else if (node == "node1") {
+        } else if (node == "node1pm") {
             listvalue2pm2_5.push(parseFloat(pm2_5).toFixed(2));
             listvalue2pm10.push(parseFloat(pm10).toFixed(2));
             if (listvalue2pm10.length > 15) {
                 listvalue2pm2_5.shift();
                 listvalue2pm10.shift();
             }
-        } else if (node == "node2") {
+        } else if (node == "node2pm") {
             listvalue3pm2_5.push(parseFloat(pm2_5).toFixed(2));
             listvalue3pm10.push(parseFloat(pm10).toFixed(2));
             if (listvalue3pm10.length > 15) {
                 listvalue3pm2_5.shift();
                 listvalue3pm10.shift();
             }
-        } else if (node == "node3") {
+        } else if (node == "node3pm") {
             listvalue4pm2_5.push(parseFloat(pm2_5).toFixed(2));
             listvalue4pm10.push(parseFloat(pm10).toFixed(2));
             if (listvalue4pm10.length > 15) {
@@ -84,9 +86,9 @@
     }
 
     microgear.on('message', function(topic, msg) {
-        var node = topic.split("/")[2];
+        var node = topic.split("/");
         var message = msg.split(",");
-        addValue(node, message[0], message[1])
+        addValue(node[2]+node[3], message[0], message[1])
     });
 
     microgear.on('connected', function() {
@@ -229,7 +231,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body" style="margin-top: 5px">
-                        <h5 class="card-title" align="center"><span><img src="imgs/ball1.png" height="30px"></span> Ballon NO.1</h5>
+                        <h5 class="card-title" align="center"><span><img src="imgs/ball1.png" height="30px"></span> บอลลูน 1</h5>
                         <br>
                         <h1 align="center" id="node0pm2_5" data-toggle="tooltip" title="PM2.5" style="color:#00e6e6;">0.00</h1></span>
                         <hr>
@@ -251,7 +253,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body" style="margin-top: 5px">
-                        <h5 class="card-title" align="center"><span><img src="imgs/ball2.png" height="30px"></span> Ballon NO.2</h5>
+                        <h5 class="card-title" align="center"><span><img src="imgs/ball2.png" height="30px"></span> บอลลูน 2</h5>
                         <br>
                         <h1 align="center" id="node1pm2_5" data-toggle="tooltip" title="PM2.5" style="color:#ff8000;">0.00</h1>
                         <hr>
@@ -272,7 +274,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body" style="margin-top: 5px">
-                        <h5 class="card-title" align="center"><span><img src="imgs/ball3.png" height="30px"></span> Ballon NO.3</h5>
+                        <h5 class="card-title" align="center"><span><img src="imgs/ball3.png" height="30px"></span> บอลลูน 3</h5>
                         <br>
                         <h1 align="center" id="node2pm2_5" data-toggle="tooltip" title="PM2.5" style="color:#00e6ac;">0.00</h1>
                         <hr>
@@ -293,7 +295,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body" style="margin-top: 5px">
-                        <h5 class="card-title" align="center"><span><img src="imgs/ball4.png" height="30px"></span> Ballon NO.4</h5>
+                        <h5 class="card-title" align="center"><span><img src="imgs/ball4.png" height="30px"></span> บอลลูน 4</h5>
                         <br>
                         <h1 align="center" id="node3pm2_5" data-toggle="tooltip" title="PM2.5" style="color:#e6e600;">0.00</h1>
                         <hr>

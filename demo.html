@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<head>
+    <title>KidBright</title>
+    <link rel="icon" href="imgs/logo_kidbright.png" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/jquery.sparkline.js"></script>
+    <script src="https://cdn.netpie.io/microgear.js"></script>
+    <style type="text/css">
+    .divWithBgImage {
+        background-image: url(imgs/bg-town.png);
+        background-repeat: no-repeat;
+        background-position: center bottom;
+        background-size: 100%;
+        /*propotional resize*/
+        height: 100vh;
+        width: 100vw;
+        background-color: #00bfff;
+    }
+
+    .jqstooltip {
+        width: 55px;
+        height: 50px;
+    }
+    </style>
+    <script>
+    var outside = 0;
+    var inside = 0;
+    const APPID = "armydev";
+    const APPKEY = "WMTjwkOnA6u7vzO";
+    const APPSECRET = "8WtPTU9kp3f8wh5d44N9NznU0";
+    // const APPID = "particleMeasurement";
+    // const APPKEY = "WG81KnRenTGrlzo";
+    // const APPSECRET = "Kw3QVq2JCltRrmAO3eYEc03KZ";
+    var firsttime = true;
+    var microgear = Microgear.create({
+        key: APPKEY,
+        secret: APPSECRET,
+        alias: "html" /*  optional  */
+    });
+
+    microgear.on('message', function(topic, msg) {
+        var node = topic.split("/");
+        var message = msg.split(",");
+        console.log(topic+" "+msg)
+        if (node[3] == "text") {
+            document.getElementById("text-shower").innerHTML = msg;
+        }
+        if (node[2] == "node1" && node[3] == "temp") {
+            outside = parseFloat(msg).toFixed(2);
+            document.getElementById("outside").innerHTML = outside;
+            
+        }
+        if (node[2] == "node2" && node[3] == "temp") {
+            inside = parseFloat(msg).toFixed(2);
+            document.getElementById("inside").innerHTML = inside;
+        }
+        if (outside != 0 & inside != 0) {
+            document.getElementById("result").innerHTML = parseFloat(outside - inside).toFixed(2);
+        }
+        //addValue(node[2]+node[3], message[0], message[1])
+    });
+
+    microgear.on('connected', function() {
+        console.log("connected")
+        microgear.subscribe("/node1/temp");
+        microgear.subscribe("/node2/temp");
+        microgear.subscribe("/node2/text");
+    });
+
+    microgear.on('present', function(event) {
+        console.log(event);
+    });
+
+    microgear.on('absent', function(event) {
+        console.log(event);
+    });
+
+    microgear.connect(APPID);
+    </script>
+    <script type="text/javascript">
+    </script>
+</head>
+
+<body class="divWithBgImage">
+    <img src="imgs/logo.png" width="300px" style="padding-top: 20px">
+    <div class="container">
+        <!-- <div class="row justify-content-md-center align-items-center">
+            <div class="col-sm-11">
+                <div class="card">
+                    <div class="card-body" style="margin-top: 5px">
+                        <h1>Message</h1>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row justify-content-md-center align-items-center" style="height: 65vh">
+            <div class="col-sm-11">
+                <div class="card">
+                    <div class="card-body" style="margin-top: 5px">
+                        <h3 id="text-shower" align="center"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body" style="margin-top: 5px">
+                        <h5 class="card-title" align="center"><!-- <span><img src="imgs/ball1.png" height="30px"></span> -->อุณหภูมิภายนอก</h5>
+                        <br>
+                        <h1 align="center" style="color:#ff8000;" id="outside">0.00</h1></span>
+                        <p align="center" style="color: #606060">&#8451;</p>
+                        <!--  <br> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="card">
+                    <!-- <div class="card-body" style="margin-top: 5px"> -->
+                    <h1 align="center">-</h1>
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body" style="margin-top: 5px">
+                        <h5 class="card-title" align="center"><!--<span><img src="imgs/ball2.png" height="30px"></span> -->อุณหภูมิภายใน</h5>
+                        <br>
+                        <h1 align="center" style="color:#00e6e6;" id="inside">0.00</h1>
+                        <p align="center" style="color: #606060">&#8451;</p>
+                        <!--  <br> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="card">
+                    <!--  <div class="card-body" style="margin-top: 5px"> -->
+                    <h1 align="center">=</h1>
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body" style="margin-top: 5px">
+                        <h5 class="card-title" align="center"><!-- <span><img src="imgs/ball3.png" height="30px"></span> -->ค่าความแตกต่าง</h5>
+                        <br>
+                        <h1 align="center" id="result" style="color:#00e6ac;">0.00</h1>
+                        <p align="center" style="color: #606060">&#8451;</p>
+                        <!--  <br> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
